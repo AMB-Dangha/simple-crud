@@ -13,7 +13,8 @@ export class AuthService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private jwtService: JwtService,
-  ) {}
+  ) {
+  }
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersRepository.findOne({ where: { username } });
@@ -26,8 +27,11 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { username: user.username, sub: user.id };
+    const access_token = this.jwtService.sign(payload, { expiresIn: '1h'});
+    const refresh_token = this.jwtService.sign(payload, { expiresIn: '7d' }); 
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token,
+      refresh_token
     };
   }
 
