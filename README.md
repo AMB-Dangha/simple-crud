@@ -58,9 +58,8 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Postman
+## Postman API Document
 https://api.postman.com/collections/29871669-b4a17e76-20e6-4369-8327-d3182ffb5581?access_key={{access_key}}
-PMAT-01HYMNS8KS65J9E4FY3E9J8328
 
 ## Support
 
