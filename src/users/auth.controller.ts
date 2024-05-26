@@ -4,12 +4,14 @@ import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post('login')
@@ -25,7 +27,7 @@ export class AuthController {
   async refreshToken(@Body() body) {
     const { refresh_token } = body;
     try {
-      const payload = this.jwtService.verify(refresh_token, { secret: "yourSecretKey" })
+      const payload = this.jwtService.verify(refresh_token, { secret: this.configService.get<string>('JWT_SECRET_KEY') })
       const new_access_token = this.jwtService.sign({ username: payload.username, sub: payload.sub}, { expiresIn: '1h' });
       return { access_token: new_access_token };
     } catch (e) {
@@ -40,7 +42,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
+  getProfile(@Request() req: any) {
     return req.user;
   }
 }
