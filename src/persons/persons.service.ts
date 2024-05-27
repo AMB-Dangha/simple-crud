@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Person } from './person.entity';
+import { CreatePersonDto } from './dto/create-person.dto';
 
 
 @Injectable()
@@ -19,16 +20,35 @@ export class PersonsService {
         return this.personRespository.findOneBy({ id });
     }
 
-    async create(person: Person) {
-        this.personRespository.save(person);
+    async create(createPersonDto: CreatePersonDto): Promise<Person> {
+        const newPerson = this.personRespository.create(createPersonDto);
+        return await this.personRespository.save(newPerson);
     }
 
-    async update(id: number, person: Person): Promise<Person> {
-        return this.personRespository.save(person);
-    }
+    async update(id: number, updatedPerson: Person): Promise<Person | undefined> {
+        const existingPerson = await this.personRespository.findOneBy({ id });
+        if (!existingPerson) {
+            return undefined;
+        }
 
-    async remove(id: number): Promise<void> {
-        await this.personRespository.delete(id);
+    Object.assign(existingPerson, updatedPerson);
+
+    // Save the updated person to the database
+    return await this.personRespository.save(existingPerson);
+  }
+
+    async remove(id: number): Promise<Person | null> {
+        const person = await this.personRespository
+        .createQueryBuilder()
+        .where("id = :id", { id })
+        .getOne();
+        
+        if (!person) {
+            return null
+        }
+
+        await this.personRespository.remove(person);
+        return person
     }
 
 

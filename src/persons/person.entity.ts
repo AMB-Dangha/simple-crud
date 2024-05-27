@@ -5,14 +5,14 @@ export class Person {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: true })
-    first_name: string;
+    @Column({ name: 'first_name', nullable: true })
+    firstName: string;
 
-    @Column({ nullable: true })
-    last_name: string;
+    @Column({ name: 'last_name', nullable: true })
+    lastName: string;
 
-    @Column({ nullable: true })
-    date_of_birth: Date;
+    @Column({ name: 'date_of_birth', nullable: true })
+    dateOfBirth: Date;
     
     @Column({ nullable: true })
     gender: string;
@@ -23,8 +23,8 @@ export class Person {
     @Column({ nullable: true })
     email: string;
 
-    @Column({ nullable: true })
-    phone_number: string;
+    @Column({ name: 'phone_number', nullable: true })
+    phoneNumber: string;
 
     @Column({ nullable: true })
     relationship: string;

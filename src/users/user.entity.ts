@@ -16,11 +16,11 @@ export class User {
     @Column({ unique: true, nullable: true})
     email: string
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    created_at: Date;
+    @Column({ name: 'created_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    createdAt: Date;
 
-    @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
-    updated_at: Date;
+    @Column({ name: 'updated_at', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+    updatedAt: Date;
 
     @BeforeInsert()
     async hashPassword() {
