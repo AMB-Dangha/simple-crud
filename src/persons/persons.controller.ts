@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Delete, UseGuards, NotFoundException, Res, ParseIntPipe, HttpStatus } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, Delete, UseGuards, NotFoundException, Res, ParseIntPipe, HttpStatus, UsePipes } from "@nestjs/common";
 import { PersonsService } from "./persons.service";
 import { CreatePersonDto } from "./dto/create-person.dto";
 import { Person } from "./interfaces/person.interface";

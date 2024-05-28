@@ -10,7 +10,7 @@ export class CreatePersonDto {
   lastName: string;
 
   @IsDateString({}, { message: 'Date of birth must be a valid date' })
-  dateOfBirth: string;
+  dateOfBirth: Date;
 
   @IsString({ message: 'Gender must be a string' })
 //   @IsNotEmpty({ message: 'Gender is required' })

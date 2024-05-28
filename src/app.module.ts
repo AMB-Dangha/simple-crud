@@ -7,6 +7,8 @@ import { PersonsModule } from './persons/person.module';
 import { AuthModule } from './users/auth.module';
 import { User } from './users/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_PIPE } from '@nestjs/core';
+import { ValidationPipe } from './validation.pipe';
 
 @Module({
   imports: [
@@ -33,6 +35,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   controllers: [AppController],
   providers: [
     AppService,
+      {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
   ],
   exports: [TypeOrmModule]
 })
