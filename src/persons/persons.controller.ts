@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Delete, UseGuards, NotFoundException, Res } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Put, Delete, UseGuards, NotFoundException, Res, ParseIntPipe, HttpStatus } from "@nestjs/common";
 import { PersonsService } from "./persons.service";
 import { CreatePersonDto } from "./dto/create-person.dto";
 import { Person } from "./interfaces/person.interface";
@@ -16,7 +16,7 @@ export class PersonsController {
       }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<Person | undefined> {
+    async findOne(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) id: number): Promise<Person | undefined> {
         const person = await this.personsService.findOne(+id);
         if (!person) {
           throw new NotFoundException(`Person with ID ${id} not found`);
@@ -35,12 +35,12 @@ export class PersonsController {
     }
 
     @Put(':id')
-    async update(@Param('id') id: string, @Body() person: Person): Promise<Person | undefined> {
+    async update(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) id: string, @Body() person: Person): Promise<Person | undefined> {
         return this.personsService.update(+id, person);
     }
 
     @Delete(':id')
-    async remove(@Param('id') id: string , @Res() res: Response): Promise<void> {
+    async remove(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) id: string , @Res() res: Response): Promise<void> {
       const person = await this.personsService.remove(+id);
       if (!person) {
         throw new NotFoundException(`Person with ID ${id} not found`);
