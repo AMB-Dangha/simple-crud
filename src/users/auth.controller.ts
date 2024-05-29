@@ -14,20 +14,20 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   @Post('login')
   async login(@Body() body: any) {
     try {
       const user = await this.authService.validateUser(body.username, body.password);
-      if (!user) { 
+      if (!user) {
         throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
       }
       return this.authService.login(user);
     } catch (error) {
       throw error;
     }
-}
+  }
 
   @Post('refresh-token')
   async refreshToken(@Body() body) {
@@ -35,7 +35,7 @@ export class AuthController {
     try {
       const payload = this.jwtService.verify(refresh_token, { secret: this.configService.get<string>('JWT_SECRET_KEY') })
       const new_access_token = this.jwtService.sign(
-        { username: payload.username, sub: payload.sub, email: payload.email, createdAt: payload.createdAt, updatedAt: payload.updatedAt}, { expiresIn: '1h' });
+        { username: payload.username, sub: payload.sub, email: payload.email, createdAt: payload.createdAt, updatedAt: payload.updatedAt }, { expiresIn: '1h' });
       return { access_token: new_access_token };
     } catch (e) {
       throw new HttpException('Invalid refresh token', HttpStatus.UNAUTHORIZED);

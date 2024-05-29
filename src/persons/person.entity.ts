@@ -13,10 +13,10 @@ export class Person {
 
     @Column({ name: 'date_of_birth', nullable: true })
     dateOfBirth: Date;
-    
+
     @Column({ nullable: true })
     gender: string;
-    
+
     @Column({ nullable: true })
     address: string;
 
