@@ -4,30 +4,33 @@ import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
-  async transform(value: any, { metatype }: ArgumentMetadata) {
-    if (!metatype || !this.toValidate(metatype)) {
-      return value;
+    async transform(value: any, { metatype }: ArgumentMetadata) {
+        if (!metatype || !this.toValidate(metatype)) {
+            return value;
+        }
+        const object = plainToInstance(metatype, value);
+        console.log(object)
+        const errors = await validate(object);
+        console.log(errors)
+        console.log('hello world')
+        if (errors.length > 0) {
+            const detailedError = this.formatErrors(errors)[0];
+            throw new BadRequestException({ message: `Validation failed for ${detailedError.field}: ${detailedError.errors[0]}` });
+        }
+        return value;
     }
-    const object = plainToInstance(metatype, value);
-    const errors = await validate(object);
-    if (errors.length > 0) {
-      const detailedError = this.formatErrors(errors)[0];
-      throw new BadRequestException({ message: `Validation failed for ${detailedError.field}: ${detailedError.errors[0]}` });
+
+    private toValidate(metatype: Function): boolean {
+        const types: Function[] = [String, Boolean, Number, Array, Object];
+        return !types.includes(metatype);
     }
-    return value;
-  }
 
-  private toValidate(metatype: Function): boolean {
-    const types: Function[] = [String, Boolean, Number, Array, Object];
-    return !types.includes(metatype);
-  }
-
-  private formatErrors(errors: any[]) {
-    return errors.map(err => {
-      return {
-        field: err.property,
-        errors: Object.values(err.constraints)
-      };
-    });
-  }
+    private formatErrors(errors: any[]) {
+        return errors.map(err => {
+            return {
+                field: err.property,
+                errors: Object.values(err.constraints)
+            };
+        });
+    }
 }

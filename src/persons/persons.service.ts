@@ -10,7 +10,7 @@ export class PersonsService {
     constructor(
         @InjectRepository(Person)
         private personRespository: Repository<Person>,
-    ) {}
+    ) { }
 
     async findAll(): Promise<Person[]> {
         return this.personRespository.find();
@@ -31,18 +31,18 @@ export class PersonsService {
             throw new NotFoundException(`Person with ID ${id} not found`);
         }
 
-    Object.assign(existingPerson, updatedPerson);
+        Object.assign(existingPerson, updatedPerson);
 
-    // Save the updated person to the database
-    return await this.personRespository.save(existingPerson);
-  }
+        // Save the updated person to the database
+        return await this.personRespository.save(existingPerson);
+    }
 
     async remove(id: number): Promise<Person | null> {
         const person = await this.personRespository
-        .createQueryBuilder()
-        .where("id = :id", { id })
-        .getOne();
-        
+            .createQueryBuilder()
+            .where("id = :id", { id })
+            .getOne();
+
         if (!person) {
             return null
         }
