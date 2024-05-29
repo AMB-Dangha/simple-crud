@@ -1,5 +1,5 @@
 // auth.service.ts
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -36,6 +36,18 @@ export class AuthService {
   }
 
   async register(userDto: CreateUserDto): Promise<User> {
+    const existingUserByUsername = await this.usersRepository.findOneBy({ username: userDto.username });
+    if (existingUserByUsername) {
+      throw new BadRequestException('Username already exists');
+    }
+
+    const existingUserByEmail = await this.usersRepository.findOneBy({ email: userDto.email });
+    if (existingUserByEmail) {
+      
+      throw new BadRequestException('Email already exists');
+    }
+
+
     const user = this.usersRepository.create(userDto);
     return this.usersRepository.save(user);
   }
