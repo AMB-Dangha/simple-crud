@@ -6,7 +6,7 @@ export class AllExceptionsFilter extends BaseExceptionFilter implements Exceptio
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
-    const request = ctx.getRequest();
+    // const request = ctx.getRequest();
     
     const status = exception instanceof HttpException
       ? exception.getStatus()
@@ -18,11 +18,12 @@ export class AllExceptionsFilter extends BaseExceptionFilter implements Exceptio
 
     const errorResponse = {
       statusCode: status,
-      message: (typeof message === 'string' ? message : (message as any).message) || 'Internal server error',
-      timestamp: new Date().toISOString(),
-      path: request.url,
+      data: null,
+      message: null,
+      error: (typeof message === 'string' ? message : (message as any).message) || 'Internal server error',
+      // timestamp: new Date().toISOString(),
+      // path: request.url,
     };
-
     response.status(status).json(errorResponse);
   }
 }

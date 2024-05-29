@@ -9,10 +9,7 @@ export class ValidationPipe implements PipeTransform<any> {
             return value;
         }
         const object = plainToInstance(metatype, value);
-        console.log(object)
         const errors = await validate(object);
-        console.log(errors)
-        console.log('hello world')
         if (errors.length > 0) {
             const detailedError = this.formatErrors(errors)[0];
             throw new BadRequestException({ message: `Validation failed for ${detailedError.field}: ${detailedError.errors[0]}` });
